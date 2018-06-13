@@ -19,6 +19,17 @@ object VertexArrayHelper{
                 .asFloatBuffer()
                 .put(vertexDatas)
 
+    fun readVertexBuffer(vertexDatas:MutableList<Float>):FloatBuffer =
+            ByteBuffer
+                    .allocateDirect(BYTES_PER_FLOAT * vertexDatas.size)
+                    .order(ByteOrder.nativeOrder())
+                    .asFloatBuffer().apply {
+                        for(data in vertexDatas){
+                            put(data)
+                        }
+                    }
+
+
     fun readVertexShortBuffer(vertexDatas:ShortArray):ShortBuffer =
             ByteBuffer
                     .allocateDirect(BYTES_PER_SHORT * vertexDatas.size)

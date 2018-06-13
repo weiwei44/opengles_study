@@ -15,6 +15,7 @@ import javax.microedition.khronos.opengles.GL10
 
 /**
  * Created by BMW on 2018/6/12.
+ * 立方体
  */
 class CubeRenderer(private val context:Context):GLSurfaceView.Renderer{
 

@@ -5,10 +5,7 @@ import android.content.Context
 import android.opengl.GLSurfaceView
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import mobile.indoorbuy.com.opengles_learn_csdn.renderer.CircleRenderer
-import mobile.indoorbuy.com.opengles_learn_csdn.renderer.CubeRenderer
-import mobile.indoorbuy.com.opengles_learn_csdn.renderer.IsoscelesTriangnleRenderer
-import mobile.indoorbuy.com.opengles_learn_csdn.renderer.TriangnleRenderer
+import mobile.indoorbuy.com.opengles_learn_csdn.renderer.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,7 +21,7 @@ class MainActivity : AppCompatActivity() {
             if(this)
                 surface.setEGLContextClientVersion(2)
         }
-        surface.setRenderer(CubeRenderer(this))
+        surface.setRenderer(ConeRenderer(this))
         setContentView(surface)
     }
 

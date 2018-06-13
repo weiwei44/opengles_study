@@ -14,6 +14,7 @@ import javax.microedition.khronos.opengles.GL10
 
 /**
  * Created by BMW on 2018/6/7.
+ * 三角形
  */
 class TriangnleRenderer(private val context: Context):GLSurfaceView.Renderer{
 

@@ -15,6 +15,7 @@ import javax.microedition.khronos.opengles.GL10
 
 /**
  * Created by BMW on 2018/6/11.
+ * 圆
  */
 class CircleRenderer(private val context: Context):GLSurfaceView.Renderer{
     private val color = floatArrayOf(1.0f, 1.0f, 1.0f, 1.0f) //白色
