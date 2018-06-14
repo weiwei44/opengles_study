@@ -4,6 +4,7 @@ import android.content.Context
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
+import android.util.Log
 import mobile.indoorbuy.com.opengles_learn_csdn.R
 import mobile.indoorbuy.com.opengles_learn_csdn.common.Content
 import mobile.indoorbuy.com.opengles_learn_csdn.common.ShaderHelper
@@ -17,7 +18,7 @@ import javax.microedition.khronos.opengles.GL10
  * Created by BMW on 2018/6/11.
  * 圆
  */
-class CircleRenderer(private val context: Context):GLSurfaceView.Renderer{
+class CircleRenderer(private val context: Context,private val oval:Float = 0f):GLSurfaceView.Renderer{
     private val color = floatArrayOf(1.0f, 1.0f, 1.0f, 1.0f) //白色
     private lateinit var vertexBuffer: FloatBuffer
     private var programObjectId: Int = 0
@@ -25,7 +26,12 @@ class CircleRenderer(private val context: Context):GLSurfaceView.Renderer{
 
     private val mProjectMatrix = FloatArray(16)
     private val mViewMatrix = FloatArray(16)
-    private val mMVPMatrix = FloatArray(16)
+    private var mMVPMatrix = FloatArray(16)
+
+
+    fun setMatrix(mMVPMatrix :FloatArray){
+        this.mMVPMatrix = mMVPMatrix
+    }
 
     override fun onDrawFrame(gl: GL10?) {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
@@ -56,12 +62,12 @@ class CircleRenderer(private val context: Context):GLSurfaceView.Renderer{
                 0f,0f,0f,   //目标坐标
                 0f,1.0f,0f)   //相机正上方向量,像y轴看，（1,0,0）像x轴看
         Matrix.multiplyMM(mMVPMatrix,0,mProjectMatrix,0,mViewMatrix,0)
+
+
     }
 
-
-
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
-        GLES20.glClearColor(0f,0f,0f,1f)
+       // GLES20.glClearColor(0f,0f,0f,1f)
         circleCoords = createVertex()
         vertexBuffer = VertexArrayHelper.readVertexBuffer(circleCoords)
         vertexBuffer.position(0)
@@ -76,18 +82,18 @@ class CircleRenderer(private val context: Context):GLSurfaceView.Renderer{
 
     private fun createVertex():FloatArray{
         val angDegSpan = 360f/100
-        val radius = 0.5f
+        val radius = 1f  //圆半径
 
         val data = mutableListOf<Float>()
                 .apply {
                     add(0f)
                     add(0f)
-                    add(0f)
+                    add(oval)
                     var i  = 0f
                     while (i < 360+angDegSpan){
                         add((radius*Math.sin(i*Math.PI/180f)).toFloat())
                         add((radius*Math.cos(i*Math.PI/180f)).toFloat())
-                        add(0f)
+                        add(oval)
                         i+=angDegSpan
                     }
 

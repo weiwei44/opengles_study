@@ -5,6 +5,7 @@ import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
 import mobile.indoorbuy.com.opengles_learn_csdn.R
+import mobile.indoorbuy.com.opengles_learn_csdn.common.Content.BYTES_PER_FLOAT
 import mobile.indoorbuy.com.opengles_learn_csdn.common.ShaderHelper
 import mobile.indoorbuy.com.opengles_learn_csdn.common.TextResourceReader
 import mobile.indoorbuy.com.opengles_learn_csdn.common.VertexArrayHelper
@@ -12,11 +13,13 @@ import java.nio.FloatBuffer
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
+
+
 /**
  * Created by BMW on 2018/6/13.
  * 圆锥
  */
-class ConeRenderer(private val context: Context):GLSurfaceView.Renderer{
+class SphereRenderer(private val context: Context):GLSurfaceView.Renderer{
 
     private var programObjectId: Int = 0
     private val mProjectMatrix = FloatArray(16)
@@ -36,11 +39,9 @@ class ConeRenderer(private val context: Context):GLSurfaceView.Renderer{
 
         val vPosition = GLES20.glGetAttribLocation(programObjectId, "vPosition")
         GLES20.glEnableVertexAttribArray(vPosition)
-        GLES20.glVertexAttribPointer(vPosition,3,GLES20.GL_FLOAT,false,0,vertexBuffer)
-
+        GLES20.glVertexAttribPointer(vPosition,3,GLES20.GL_FLOAT,false,BYTES_PER_FLOAT * 3,vertexBuffer)
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN,0,vertexSize/3)   //绘制椎体
-        //GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN,1,vertexSize)
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN,3,vertexSize/3-1)  //绘制底部圆
+
 
         GLES20.glDisableVertexAttribArray(vPosition)
     }
@@ -75,8 +76,8 @@ class ConeRenderer(private val context: Context):GLSurfaceView.Renderer{
 
         createConeVertex()
 
-        val vertexCode = TextResourceReader.readTextFileFromResource(context, R.raw.cone_triangle_vertex_shader)
-        val fragmentCode = TextResourceReader.readTextFileFromResource(context, R.raw.cone_triangle_fragment_shader)
+        val vertexCode = TextResourceReader.readTextFileFromResource(context, R.raw.ball_triangle_vertex_shader)
+        val fragmentCode = TextResourceReader.readTextFileFromResource(context, R.raw.ball_triangle_fragment_shader)
         val vertexShader  = ShaderHelper.compileVertexShader(vertexCode)
         val fragmentShader = ShaderHelper.compileFragmentShader(fragmentCode)
         programObjectId = ShaderHelper.linkProgram(vertexShader,fragmentShader)
@@ -84,22 +85,39 @@ class ConeRenderer(private val context: Context):GLSurfaceView.Renderer{
 
 
     fun createConeVertex(){
+        val step = 5f
         val height = 2f  //圆锥高度
         val radius = 1f  //圆锥半径
         val angDegSpan = 360f / 100   //将圆分成100份
         val pos = mutableListOf<Float>().apply {
-            add(0f)
-            add(0f)
-            add(height)
+            var r1: Float
+            var r2: Float
+            var h1: Float
+            var h2: Float
+            var sin: Float
+            var cos: Float
+            var i = -90f
+            while (i < 90 + step) {
+                r1 = Math.cos(i * Math.PI / 180.0).toFloat()
+                r2 = Math.cos((i + step) * Math.PI / 180.0).toFloat()
+                h1 = Math.sin(i * Math.PI / 180.0).toFloat()
+                h2 = Math.sin((i + step) * Math.PI / 180.0).toFloat()
+                // 固定纬度, 360 度旋转遍历一条纬线
+                val step2 = step * 2
+                var j = 0.0f
+                while (j < 360.0f + step) {
+                    cos = Math.cos(j * Math.PI / 180.0).toFloat()
+                    sin = -Math.sin(j * Math.PI / 180.0).toFloat()
 
-            var i = 0f
-            while (i < 360f+angDegSpan){
-
-                add(radius*Math.sin(i * Math.PI/180f).toFloat())
-                add(radius*Math.cos(i * Math.PI/180f).toFloat())
-                add(0f)
-
-                i += angDegSpan
+                    add(r2 * cos)
+                    add(h2)
+                    add(r2 * sin)
+                    add(r1 * cos)
+                    add(h1)
+                    add(r1 * sin)
+                    j += step2
+                }
+                i += step
             }
         }
         vertexSize = pos.size
