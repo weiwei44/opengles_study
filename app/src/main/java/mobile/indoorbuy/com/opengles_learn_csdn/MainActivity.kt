@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
             if(this)
                 surface.setEGLContextClientVersion(2)
         }
-        surface.setRenderer(CylinderRenderer(this))
+        surface.setRenderer(TextureHandleRenderer(this))
         setContentView(surface)
     }
 

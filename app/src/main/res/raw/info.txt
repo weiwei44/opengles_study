@@ -1,0 +1,112 @@
+1.向量：向量我们可以看做是数组，在GLSL通常用于储存颜色、坐标等数据，
+针对维数，可分为二维、三维和四位向量。针对存储的标量类型，可以分为
+bool、int和float。共有vec2、vec3、vec4，ivec2、ivec3、ivec4、bvec2、
+bvec3和bvec4九种类型，数组代表维数、i表示int类型、b表示bool类型
+
+2.GLSL中的向量表示竖向量，所以与矩阵相乘进行变换时，矩阵在前，向量
+在后（与DirectX正好相反）
+
+      tip:作为颜色向量时，用rgba表示分量，就如同取数组的中具体数据的索引值。三维颜色向量就用rgb表示分量。
+            比如对于颜色向量vec4 color，color[0]和color.r都表示color向量的第一个值，也就是红色的分量。其他相同。
+
+          作为位置向量时，用xyzw表示分量，xyz分别表示xyz坐标，w表示向量的模。三维坐标向量为xyz表示分量，二维向量为xy表示分量。
+
+          作为纹理向量时，用stpq表示分量，三维用stp表示分量，二维用st表示分量。
+
+3.矩阵：在GLSL中矩阵拥有2*2、3*3、4*4三种类型的矩阵，分别用mat2、mat3、mat4表示。
+我们可以把矩阵看做是一个二维数组，也可以用二维数组下表的方式取里面具体位置的值。
+
+
+        attritude：一般用于各个顶点各不相同的量。如顶点颜色、坐标等。
+        uniform：一般用于对于3D物体中所有顶点都相同的量。比如光源位置，统一变换矩阵等。
+        varying：表示易变量，一般用于顶点着色器传递到片元着色器的量。
+        const：常量。
+
+
+采样器：采样器是专门用来对纹理进行采样工作的，在GLSL中一般来说，一个采样器变量表示一副或者一套纹理贴图。
+所谓的纹理贴图可以理解为我们看到的物体上的皮肤。
+
+结构体：和C语言中的结构体相同，用struct来定义结构体，关于结构体参考C语言中的结构体。
+
+数组：数组知识也和C中相同，不同的是数组声明时可以不指定大小，但是建议在不必要的情况下，还是指定大小的好。
+
+空类型：空类型用void表示，仅用来声明不返回任何值得函数。
+
+4.函数
+
+    GLSL中也可以定义函数，定义函数的方式也与C语言基本相同。函数的返回值可以是GLSL中的除了采样器的任意类型。
+    对于GLSL中函数的参数，可以用参数用途修饰符来进行修饰，常用修饰符如下：
+
+    in：输入参数，无修饰符时默认为此修饰符。
+    out：输出参数。
+    inout：既可以作为输入参数，又可以作为输出参数。
+
+5.浮点精度
+
+    与顶点着色器不同的是，在片元着色器中使用浮点型时，必须指定浮点类型的精度，否则编译会报错。精度有三种，分别为：
+
+    lowp：低精度。8位。
+    mediump：中精度。10位。
+    highp：高精度。16位。
+
+ 6.内建变量
+
+    a.顶点着色器的内建变量
+    输入变量:
+        gl_Position：顶点坐标
+        gl_PointSize：点的大小，没有赋值则为默认值1，通常设置绘图为点绘制才有意义。
+
+     b.片元着色器的内建变量
+     输入变量:
+        gl_FragCoord：当前片元相对窗口位置所处的坐标。
+        gl_FragFacing：bool型，表示是否为属于光栅化生成此片元的对应图元的正面
+
+      输出变量:
+        gl_FragColor：当前片元颜色
+        gl_FragData：vec4类型的数组。向其写入的信息，供渲染管线的后继过程使用。
+
+7.常用内置函数
+    radians(x)：角度转弧度
+    degrees(x)：弧度转角度
+    sin(x)：正弦函数，传入值为弧度。相同的还有cos余弦函数、tan正切函数、asin反正弦、acos反余弦、atan反正切
+    pow(x,y)：xy
+    exp(x)：ex
+    exp2(x)：2x
+    log(x)：logex
+    log2(x)：log2x
+    sqrt(x)：x−−√
+    inversesqr(x)：1x−−√
+    abs(x)：取x的绝对值
+    sign(x)：x>0返回1.0，x<0返回-1.0，否则返回0.0
+    ceil(x)：返回大于或者等于x的整数
+    floor(x)：返回小于或者等于x的整数
+    fract(x)：返回x-floor(x)的值
+    mod(x,y)：取模（求余）
+    min(x,y)：获取xy中小的那个
+    max(x,y)：获取xy中大的那个
+    mix(x,y,a)：返回x∗(1−a)+y∗a
+    step(x,a)：x< a返回0.0，否则返回1.0
+    smoothstep(x,y,a)：a < x返回0.0，a>y返回1.0，否则返回0.0-1.0之间平滑的Hermite插值。
+    dFdx(p)：p在x方向上的偏导数
+    dFdy(p)：p在y方向上的偏导数
+    fwidth(p)：p在x和y方向上的偏导数的绝对值之和
+ 几何函数:
+    length(x)：计算向量x的长度
+    distance(x,y)：返回向量xy之间的距离
+    dot(x,y)：返回向量xy的点积
+    cross(x,y)：返回向量xy的差积
+    normalize(x)：返回与x向量方向相同，长度为1的向量
+ 矩阵函数:
+    matrixCompMult(x,y)：将矩阵相乘
+    lessThan(x,y)：返回向量xy的各个分量执行x< y的结果，类似的有greaterThan,equal,notEqual
+    lessThanEqual(x,y)：返回向量xy的各个分量执行x<= y的结果，类似的有类似的有greaterThanEqual
+    any(bvec x)：x有一个元素为true，则为true
+    all(bvec x)：x所有元素为true，则返回true，否则返回false
+    not(bvec x)：x所有分量执行逻辑非运算
+ 纹理采样函数:
+    纹理采样函数有texture2D、texture2DProj、texture2DLod、texture2DProjLod、textureCube、
+    textureCubeLod及texture3D、texture3DProj、texture3DLod、texture3DProjLod等。
+
+    texture表示纹理采样，2D表示对2D纹理采样，3D表示对3D纹理采样
+    Lod后缀，只适用于顶点着色器采样
+    Proj表示纹理坐标st会除以q
