@@ -27,6 +27,15 @@ class MatrixUtils{
 
     //回退到上个矩阵
     fun backMatrix(){
+        if(mStack.size == 0){
+            mMatrixCurrent= floatArrayOf(
+                    1f,0f,0f,0f,
+                    0f,1f,0f,0f,
+                    0f,0f,1f,0f,
+                    0f,0f,0f,1f
+            )
+            return
+        }
         mMatrixCurrent = mStack.pop()
     }
 

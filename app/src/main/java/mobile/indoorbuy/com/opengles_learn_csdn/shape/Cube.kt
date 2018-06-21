@@ -1,4 +1,4 @@
-package mobile.indoorbuy.com.opengles_learn_csdn.renderer
+package mobile.indoorbuy.com.opengles_learn_csdn.shape
 
 import android.content.Context
 import android.opengl.GLES20
@@ -17,7 +17,7 @@ import javax.microedition.khronos.opengles.GL10
  * Created by BMW on 2018/6/12.
  * 立方体
  */
-class CubeRenderer(private val context:Context):GLSurfaceView.Renderer{
+class Cube(private val context:Context){
 
     val cubePositions = floatArrayOf(
             -1.0f,1.0f,1.0f,    //正面左上0
@@ -51,8 +51,6 @@ class CubeRenderer(private val context:Context):GLSurfaceView.Renderer{
     )
 
     private var programObjectId: Int = 0
-    private val mProjectMatrix = FloatArray(16)
-    private val mViewMatrix = FloatArray(16)
     private var mMVPMatrix = FloatArray(16)
 
     private lateinit var vertexBuffer: FloatBuffer
@@ -72,8 +70,7 @@ class CubeRenderer(private val context:Context):GLSurfaceView.Renderer{
         mMVPMatrix = matrix
     }
 
-    override fun onDrawFrame(gl: GL10?) {
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT or GLES20.GL_DEPTH_BUFFER_BIT)
+    fun onDraw() {
         GLES20.glUseProgram(programObjectId)
 
         val vMatrix = GLES20.glGetUniformLocation(programObjectId, "vMatrix")
@@ -92,25 +89,8 @@ class CubeRenderer(private val context:Context):GLSurfaceView.Renderer{
         GLES20.glDisableVertexAttribArray(vPosition)
     }
 
-    override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
-        GLES20.glViewport(0,0,width,height)
-        val ratio = width.toFloat() / height.toFloat()
-        Matrix.frustumM(mProjectMatrix,0,-ratio,ratio,-1f,1f,3f,20f)
-        Matrix.setLookAtM(mViewMatrix, 0,
-                0.0f,0.0f,15f,      //眼睛位置可以直接设置为（5,5,15），从斜面去看正方体，这样就不用旋转了
-                0f,0f,0f,
-                0f,1f,0f)
-        Matrix.multiplyMM(mMVPMatrix,0,mProjectMatrix,0,mViewMatrix,0)
 
-        //我们眼睛在（0,0,15），是从z轴直线看过出，所以只能看到一个面，旋转一下，更有立体感
-        Matrix.rotateM(mMVPMatrix,0,-45f,0f,1f,0f) //绕y轴逆时针旋转45度
-        Matrix.rotateM(mMVPMatrix,0,-45f,1f,0f,0f)
-    }
-
-    override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
-        GLES20.glEnable(GLES20.GL_DEPTH_TEST)
-        GLES20.glClearColor(0.5f,0.5f,0.5f,1f)
-
+    fun created() {
         val vertexCode = TextResourceReader.readTextFileFromResource(context, R.raw.isosceles_triangle_vertex_shader)
         val fragmentCode = TextResourceReader.readTextFileFromResource(context, R.raw.isosceles_triangle_fragment_shader)
         val vertexShader  = ShaderHelper.compileVertexShader(vertexCode)
