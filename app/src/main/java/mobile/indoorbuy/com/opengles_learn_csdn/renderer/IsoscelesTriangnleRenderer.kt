@@ -6,6 +6,7 @@ import android.opengl.GLSurfaceView
 import android.opengl.Matrix
 import mobile.indoorbuy.com.opengles_learn_csdn.R
 import mobile.indoorbuy.com.opengles_learn_csdn.common.Content.BYTES_PER_FLOAT
+import mobile.indoorbuy.com.opengles_learn_csdn.common.MatrixUtils
 import mobile.indoorbuy.com.opengles_learn_csdn.common.ShaderHelper
 import mobile.indoorbuy.com.opengles_learn_csdn.common.TextResourceReader
 import mobile.indoorbuy.com.opengles_learn_csdn.common.VertexArrayHelper
@@ -30,7 +31,7 @@ class IsoscelesTriangnleRenderer(private val context: Context):GLSurfaceView.Ren
 
     private val mProjectMatrix = FloatArray(16)
     private val mViewMatrix = FloatArray(16)
-    private val mMVPMatrix = FloatArray(16)
+    private var mMVPMatrix = FloatArray(16)
 
     private lateinit var vertexBuffer: FloatBuffer
     private lateinit var colorBuffer: FloatBuffer
@@ -66,16 +67,24 @@ class IsoscelesTriangnleRenderer(private val context: Context):GLSurfaceView.Ren
         val ratio = width.toFloat() / height.toFloat()
         //设置透视投影
         //MatrixHelper.perspectiveM(mProjectMatrix,60f,ratio,3f,7f)
-        Matrix.frustumM(mProjectMatrix,0,-ratio,ratio,-1f,1f,3f,7f)
 
-        //设置相机位置
-        Matrix.setLookAtM(mViewMatrix,0,
-                0f,0f,7f,    //相机坐标,只要在平截头体内部就OK，离近平面越近，越大
-                0f,0f,0f,   //目标坐标
-                0f,1.0f,0f)   //相机正上方向量,像y轴看，（1,0,0）像x轴看
+        val matrix = MatrixUtils()
+        matrix.saveMatrix()
+        matrix.scale(2f,1f,1f)   //x方向扩大2倍
+        matrix.ratate(-60f,1f,0f,0f)  //绕x轴顺时针旋转60度
+        matrix.frustum(-ratio,ratio,-1f,1f,3f,7f)
+        matrix.setCamera(0f,0f,7f,0f,0f,0f,0f,1.0f,0f)
+        mMVPMatrix = matrix.getFinalMatrix()
 
-        //计算变换矩阵 mProjectMatrix*mViewMatrix
-        Matrix.multiplyMM(mMVPMatrix,0,mProjectMatrix,0,mViewMatrix,0)
+//        Matrix.frustumM(mProjectMatrix,0,-ratio,ratio,-1f,1f,3f,7f)
+//        //设置相机位置
+//        Matrix.setLookAtM(mViewMatrix,0,
+//                0f,0f,7f,    //相机坐标,只要在平截头体内部就OK，离近平面越近，越大
+//                0f,0f,0f,   //目标坐标
+//                0f,1.0f,0f)   //相机正上方向量,像y轴看，（1,0,0）像x轴看
+//
+//        //计算变换矩阵 mProjectMatrix*mViewMatrix
+//        Matrix.multiplyMM(mMVPMatrix,0,mProjectMatrix,0,mViewMatrix,0)
     }
 
 

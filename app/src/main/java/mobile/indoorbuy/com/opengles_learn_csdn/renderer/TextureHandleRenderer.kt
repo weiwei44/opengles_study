@@ -129,7 +129,6 @@ class TextureHandleRenderer(private val context: Context, private val oval:Float
                 0f,1.0f,0f)   //相机正上方向量,像y轴看，（1,0,0）像x轴看
         Matrix.multiplyMM(mMVPMatrix,0,mProjectMatrix,0,mViewMatrix,0)
 
-
     }
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {

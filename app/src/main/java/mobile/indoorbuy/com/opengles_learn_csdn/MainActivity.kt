@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
             if(this)
                 surface.setEGLContextClientVersion(2)
         }
-        surface.setRenderer(TextureHandleRenderer(this))
+        surface.setRenderer(IsoscelesTriangnleRenderer(this))
         setContentView(surface)
     }
 
