@@ -1,46 +1,27 @@
-package mobile.indoorbuy.com.opengles_learn_csdn
+package mobile.indoorbuy.com.opengles_learn_csdn.activity
 
 import android.Manifest
-import android.app.ActivityManager
-import android.content.Context
-import android.opengl.GLSurfaceView
 import android.os.Build
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.annotation.RequiresApi
+import android.support.v7.app.AppCompatActivity
 import com.tbruyelle.rxpermissions2.RxPermissions
-import kotlinx.android.synthetic.main.activity_mian_gl.*
-import mobile.indoorbuy.com.opengles_learn_csdn.renderer.*
+import kotlinx.android.synthetic.main.activity_main.*
+import mobile.indoorbuy.com.opengles_learn_csdn.R
 
-
-
-class MainActivity : AppCompatActivity() {
+/**
+ * Created by BMW on 2018/6/25.
+ */
+class CameraActivity: AppCompatActivity(){
 
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_mian_gl)
+        setContentView(R.layout.activity_main)
         requestPermissions()
 
-        val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        with(activityManager.run {
-            deviceConfigurationInfo.reqGlEsVersion >= 0x20000
-        }){
-            if(this)
-                surface.setEGLContextClientVersion(2)
-        }
-        //surface.setRenderer(CameraRenderer(this,surface))
-        //surface.renderMode = GLSurfaceView.RENDERMODE_WHEN_DIRTY
-        surface.setRenderer(BallIBORenderer(this))
-    }
-
-
-
-    external fun stringFromJNI(): String
-
-    companion object {
-        init {
-            System.loadLibrary("native-lib")
+        sample.setOnClickListener {
+            cp.takePicture()
         }
     }
 

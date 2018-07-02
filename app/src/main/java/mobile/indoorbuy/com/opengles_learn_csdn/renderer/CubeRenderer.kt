@@ -40,13 +40,13 @@ class CubeRenderer(private val context:Context):GLSurfaceView.Renderer{
     )
 
     val color = floatArrayOf(
-            0f,1f,0f,1f,
-            0f,1f,0f,1f,
-            0f,1f,0f,1f,
-            0f,1f,0f,1f,
             1f,0f,0f,1f,
-            1f,0f,0f,1f,
-            1f,0f,0f,1f,
+            1f,0f,1f,1f,
+            0f,0f,1f,1f,
+            0f,1f,0f,1f,
+            0f,1f,0f,1f,
+            0f,0f,1f,1f,
+            1f,0f,1f,1f,
             1f,0f,0f,1f
     )
 

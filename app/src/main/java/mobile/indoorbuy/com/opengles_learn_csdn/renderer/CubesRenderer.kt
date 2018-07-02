@@ -61,7 +61,7 @@ class CubesRenderer(private val context:Context):GLSurfaceView.Renderer{
         GLES20.glEnable(GLES20.GL_DEPTH_TEST)
         GLES20.glClearColor(0.5f,0.5f,0.5f,1f)
 
-        cube1.created()
-        cube2.created()
+        cube1.create()
+        cube2.create()
     }
 }

@@ -41,4 +41,7 @@ dependencies {
 
     implementation Libs.support_appcompat_v7
     implementation Libs.constraint
+    implementation Libs.rxjava
+    implementation Libs.rxandroid
+    implementation Libs.rxpermissions
 }

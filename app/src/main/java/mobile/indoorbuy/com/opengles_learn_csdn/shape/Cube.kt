@@ -17,7 +17,7 @@ import javax.microedition.khronos.opengles.GL10
  * Created by BMW on 2018/6/12.
  * 立方体
  */
-class Cube(private val context:Context){
+class Cube(private val context:Context) : Shape(){
 
     val cubePositions = floatArrayOf(
             -1.0f,1.0f,1.0f,    //正面左上0
@@ -50,9 +50,6 @@ class Cube(private val context:Context){
             1f,0f,0f,1f
     )
 
-    private var programObjectId: Int = 0
-    private var mMVPMatrix = FloatArray(16)
-
     private lateinit var vertexBuffer: FloatBuffer
     private lateinit var colorBuffer: FloatBuffer
     private lateinit var vertexIndexBuffer: ShortBuffer
@@ -66,11 +63,7 @@ class Cube(private val context:Context){
         vertexIndexBuffer.position(0)
     }
 
-    fun setMatrix(matrix:FloatArray){
-        mMVPMatrix = matrix
-    }
-
-    fun onDraw() {
+    override fun onDraw() {
         GLES20.glUseProgram(programObjectId)
 
         val vMatrix = GLES20.glGetUniformLocation(programObjectId, "vMatrix")
@@ -90,7 +83,7 @@ class Cube(private val context:Context){
     }
 
 
-    fun created() {
+    override fun create() {
         val vertexCode = TextResourceReader.readTextFileFromResource(context, R.raw.isosceles_triangle_vertex_shader)
         val fragmentCode = TextResourceReader.readTextFileFromResource(context, R.raw.isosceles_triangle_fragment_shader)
         val vertexShader  = ShaderHelper.compileVertexShader(vertexCode)

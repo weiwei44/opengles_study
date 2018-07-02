@@ -9,6 +9,8 @@ import java.nio.ShortBuffer
 
 /**
  * Created by BMW on 2018/6/7.
+ *
+ * VAO是放在客户端的顶点数据
  */
 object VertexArrayHelper{
 
@@ -23,7 +25,8 @@ object VertexArrayHelper{
             ByteBuffer
                     .allocateDirect(BYTES_PER_FLOAT * vertexDatas.size)
                     .order(ByteOrder.nativeOrder())
-                    .asFloatBuffer().apply {
+                    .asFloatBuffer()
+                    .apply {
                         for(data in vertexDatas){
                             put(data)
                         }
@@ -36,4 +39,15 @@ object VertexArrayHelper{
                     .order(ByteOrder.nativeOrder())
                     .asShortBuffer()
                     .put(vertexDatas)
+
+    fun readVertexShortBuffer(vertexDatas:MutableList<Short>):ShortBuffer =
+            ByteBuffer
+                    .allocateDirect(BYTES_PER_SHORT * vertexDatas.size)
+                    .order(ByteOrder.nativeOrder())
+                    .asShortBuffer()
+                    .apply {
+                        for(data in vertexDatas){
+                            put(data)
+                        }
+                    }
 }
