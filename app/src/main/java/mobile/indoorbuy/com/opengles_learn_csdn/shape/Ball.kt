@@ -2,6 +2,7 @@ package mobile.indoorbuy.com.opengles_learn_csdn.shape
 
 import android.content.Context
 import android.opengl.GLES20
+import android.opengl.Matrix
 import mobile.indoorbuy.com.opengles_learn_csdn.R
 import mobile.indoorbuy.com.opengles_learn_csdn.common.*
 
@@ -140,4 +141,32 @@ class Ball(private val context: Context) :Shape(){
 
         GLES20.glDisableVertexAttribArray(vPosition)
     }
+
+    private var mLastX = 0f
+    private var mLastY = 0f
+    private var rotationX = 0f
+    private var rotationY = 0f
+
+    fun handleTouchUp(x: Float, y: Float) {
+        this.mLastX = 0f
+        this.mLastY = 0f
+    }
+
+    fun handleTouchDrag(x: Float, y: Float) {
+        val offsetX = this.mLastX - x
+        val offsetY = this.mLastY - y
+        this.rotationY -= offsetX/10  // 注意! 屏幕横坐标的步伐，球应该是绕着Y轴旋转
+        this.rotationX -= offsetY/10  // 注意! 屏幕纵坐标的步伐，球应该是绕着X轴旋转
+        Matrix.rotateM(mMVPMatrix,0,this.rotationX,1f,0f,0f)
+        Matrix.rotateM(mMVPMatrix,0,this.rotationY,0f,1f,0f)
+
+        this.mLastX = x
+        this.mLastY = y
+    }
+
+    fun handleTouchDown(x: Float, y: Float) {
+        this.mLastX = x
+        this.mLastY = y
+    }
+
 }

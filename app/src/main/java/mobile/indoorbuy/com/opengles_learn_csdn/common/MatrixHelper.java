@@ -15,8 +15,8 @@ public class MatrixHelper {
     /**
      * 生成透视矩阵
      * @param m
-     * @param yFovInDegrees
-     * @param aspect
+     * @param yFovInDegrees  焦距
+     * @param aspect   宽高比
      * @param n
      * @param f
      */
@@ -52,14 +52,32 @@ public class MatrixHelper {
         float[] camera=new float[16];
         float[] matrix=new float[16];
 
-        float sWhView=(float)viewWidth/viewHeight;
         float sWhImg=(float)imgWidth/imgHeight;
-        Log.e("tag","sWhImg = "+sWhImg+",sWhView = "+sWhView);
-        if(sWhImg>sWhView){
-            Matrix.orthoM(projection,0,-sWhView/sWhImg,sWhView/sWhImg,-1,1,1,3);
-        }else{
-            Matrix.orthoM(projection,0,-1,1,-sWhImg/sWhView,sWhImg/sWhView,1,3);
+        float displayScale = (float)viewHeight/viewWidth;
+        int height = 0;   //实际的surfaceview高
+        int width = 0;
+
+        //就算出图片到屏幕需要的实际宽高
+        if (sWhImg > displayScale) {
+            height = (int) (sWhImg * viewWidth);
+            width = viewWidth;
+        } else {
+            width = (int) (viewHeight / sWhImg);
+            height = viewHeight;
         }
+        if(width < height){
+            Matrix.orthoM(projection,0,-(float) width/height,(float)width/height,-1,1,1,3);
+        }else{
+            Matrix.orthoM(projection,0,-1,1,-(float)height/width,(float)height/width,1,3);
+        }
+
+//        if(sWhImg>sWhView){
+//            Matrix.orthoM(projection,0,-sWhView/sWhImg,sWhView/sWhImg,-1,1,1,3);
+//        }else{
+//            Matrix.orthoM(projection,0,-1,1,-sWhImg/sWhView,sWhImg/sWhView,1,3);
+//        }
+
+
         Matrix.setLookAtM(camera,0,0,0,1,0,0,0,0,1,0);
         Matrix.multiplyMM(matrix,0,projection,0,camera,0);
         return matrix;
