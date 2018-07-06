@@ -31,8 +31,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 //        setContentView(R.layout.activity_mian_gl)
         requestPermissions()
-        val eglView = EGLView(this)
-        setContentView(eglView)
+  //      val eglView = EGLView(this)
+        setContentView(R.layout.activity_main)
 
 //        setAlartTime()
 //        val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager

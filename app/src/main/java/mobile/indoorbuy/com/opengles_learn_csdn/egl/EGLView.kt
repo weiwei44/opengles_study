@@ -13,6 +13,7 @@ import android.view.SurfaceView
 import android.widget.FrameLayout
 import mobile.indoorbuy.com.opengles_learn_csdn.camera.ACamera
 import mobile.indoorbuy.com.opengles_learn_csdn.camera.CameraKitKat
+import mobile.indoorbuy.com.opengles_learn_csdn.common.MatrixHelper
 import mobile.indoorbuy.com.opengles_learn_csdn.common.ShaderHelper
 import java.lang.ref.WeakReference
 
@@ -23,16 +24,36 @@ class EGLView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
         FrameLayout(context, attrs, defStyleAttr),SurfaceHolder.Callback{
 
     private val surfaceView = SurfaceView(context)
+    private lateinit var frameRect: FrameRect
 
     constructor(context: Context, attrs: AttributeSet? = null) :
             this(context, null, 0){
 
         surfaceView.holder.addCallback(this)
         addView(surfaceView)
+        frameRect = FrameRect(context)
     }
 
+    override fun surfaceCreated(p0: SurfaceHolder?) {
+
+        eglCore = EGLCore()
+        displaySurface = WindowSurface(eglCore,surfaceView.holder.surface,false)
+        displaySurface.makeCurrent()
+
+        frameRect.initProgram()
+        mTextureId  = ShaderHelper.createCameraTextureID()
+        mCameraTexture = SurfaceTexture(mTextureId)
+        mCameraTexture.setOnFrameAvailableListener {
+            mHandler.sendEmptyMessage(MainHandler.MSG_FRAME_AVAILABLE)
+        }
+
+    }
+
+    val cameraId = 0
     override fun surfaceChanged(p0: SurfaceHolder?, p1: Int, width: Int, height: Int) {
-        camera.openTexture(0,mCameraTexture,width,height)
+        GLES20.glViewport(0, 0,width , height)
+        camera.openTexture(cameraId,mCameraTexture,width,height)
+        calculateMatrix(width,height)
     }
 
     override fun surfaceDestroyed(p0: SurfaceHolder?) {
@@ -59,30 +80,37 @@ class EGLView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
         }
 
         companion object {
-            val MSG_FRAME_AVAILABLE = 1
+            const val MSG_FRAME_AVAILABLE = 1
         }
     }
 
-
-    override fun surfaceCreated(p0: SurfaceHolder?) {
-
-        eglCore = EGLCore()
-        displaySurface = WindowSurface(eglCore,surfaceView.holder.surface,false)
-        displaySurface.makeCurrent()
-
-        mTextureId  = ShaderHelper.createCameraTextureID()
-        mCameraTexture = SurfaceTexture(mTextureId)
-        mCameraTexture.setOnFrameAvailableListener {
-            mHandler.sendEmptyMessage(MainHandler.MSG_FRAME_AVAILABLE)
-        }
-    }
-
+    private val mTmpMatrix = FloatArray(16)
     fun drawFrame() {
-        Log.e("weiwei", " 画一帧 = ${Thread.currentThread().name}")
         displaySurface.makeCurrent()  //锁定渲染介质
         GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT or GLES20.GL_COLOR_BUFFER_BIT)
-        GLES20.glClearColor(0.5f, 0.5f, 0.5f, 1f)
-        mCameraTexture.updateTexImage() // 告诉Android.Camera已经使用帧图像了
+        GLES20.glClearColor(1f, 0f, 0f, 1f)
+        mCameraTexture.updateTexImage() // // 获取预览帧
+        mCameraTexture.getTransformMatrix(mTmpMatrix)  // 获取预览帧的变换矩阵
+
+        frameRect.drawFrame(mTextureId,mTmpMatrix,mMVPMatrix)
+
         displaySurface.swapBuffers() //交换读写的渲染介质
+    }
+
+    lateinit var mMVPMatrix:FloatArray
+    private fun calculateMatrix(viewWidth:Int,viewHeight:Int) {
+        mMVPMatrix = MatrixHelper.getShowMatrix(camera.cameraInfo.preSizeWidth,
+                camera.cameraInfo.preSizeHeight,
+                viewWidth, viewHeight)
+
+        if (camera.cameraId == 1) {
+            //支持后置
+            MatrixHelper.flip(mMVPMatrix, true, false)
+            MatrixHelper.rotate(mMVPMatrix, 90f)
+        } else if (camera.cameraId == 0) {
+            //不支持后置
+            //MatrixHelper.flip(mMVPMatrix, true, false)
+            MatrixHelper.rotate(mMVPMatrix, -90f)
+        }
     }
 }

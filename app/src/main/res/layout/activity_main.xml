@@ -6,15 +6,22 @@
     android:layout_height="match_parent"
     tools:context="mobile.indoorbuy.com.opengles_learn_csdn.MainActivity">
 
-    <mobile.indoorbuy.com.opengles_learn_csdn.camera.CameraPreview
-        android:id="@+id/cp"
+    <!--<mobile.indoorbuy.com.opengles_learn_csdn.camera.CameraPreview-->
+        <!--android:id="@+id/cp"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent" >-->
+    <!--</mobile.indoorbuy.com.opengles_learn_csdn.camera.CameraPreview>-->
+
+    <mobile.indoorbuy.com.opengles_learn_csdn.egl.EGLView
+        android:id="@+id/egl"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
-    </mobile.indoorbuy.com.opengles_learn_csdn.camera.CameraPreview>
+        android:layout_height="match_parent">
+
+    </mobile.indoorbuy.com.opengles_learn_csdn.egl.EGLView>
 
     <TextView
         android:id="@+id/sample"

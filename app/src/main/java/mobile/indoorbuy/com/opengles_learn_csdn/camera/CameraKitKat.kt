@@ -55,6 +55,7 @@ class CameraKitKat(val displayView: SurfaceView) : ACamera() {
         cameraId = type
         if(!openCamera(type)) return
         setParameters(camera!!,screenWidth,screenHeight)
+
         camera!!.setPreviewTexture(surfaceTexture)
         camera!!.startPreview()
     }
@@ -181,7 +182,6 @@ class CameraKitKat(val displayView: SurfaceView) : ACamera() {
         }
 
         camera.parameters = parameters
-
 
 
         //填充info

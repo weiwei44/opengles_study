@@ -21,7 +21,7 @@ class CameraActivity: AppCompatActivity(){
         requestPermissions()
 
         sample.setOnClickListener {
-            cp.takePicture()
+            //cp.takePicture()
         }
     }
 

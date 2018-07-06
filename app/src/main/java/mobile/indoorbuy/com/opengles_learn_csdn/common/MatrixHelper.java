@@ -65,6 +65,9 @@ public class MatrixHelper {
             width = (int) (viewHeight / sWhImg);
             height = viewHeight;
         }
+
+        Log.e("weiwei","width---"+width+",height---"+height);
+
         if(width < height){
             Matrix.orthoM(projection,0,-(float) width/height,(float)width/height,-1,1,1,3);
         }else{
