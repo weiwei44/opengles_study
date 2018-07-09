@@ -86,6 +86,44 @@ public class MatrixHelper {
         return matrix;
     }
 
+    public static float[] getSignaMatrix(int imgWidth,int imgHeight,int viewWidth,int viewHeight){
+        float[] projection=new float[16];
+        float[] camera=new float[16];
+        float[] matrix=new float[16];
+
+        float imgRatio=(float)imgWidth/imgHeight;
+        float ratio = (float)viewWidth/viewHeight;
+
+        if(viewWidth > viewHeight){
+            if(imgRatio > ratio){
+                Matrix.orthoM(projection,0,
+                        -ratio*imgRatio,ratio*imgRatio,-1f,1f,3f,7f);
+            }else{
+                Matrix.orthoM(projection,0,
+                        -ratio/imgRatio,ratio/imgRatio,-1f,1f,3f,7f);
+            }
+        }else{
+            if(imgRatio > ratio){
+                Matrix.orthoM(projection,0,
+                        -1f,1f,-1/ratio*imgRatio,1/ratio*imgRatio,3f,7f);
+            }else{
+                Matrix.orthoM(projection,0,
+                        -1f,1f,-imgRatio/ratio,imgRatio/ratio,3f,7f);
+            }
+        }
+
+        Matrix.setLookAtM(camera,0,
+                0f,0f,7f,    //相机坐标,只要在平截头体内部就OK，离近平面越近，越大
+                0f,0f,0f,   //目标坐标
+                0f,1.0f,0f);   //相机正上方向量,像y轴看，（1,0,0）像x轴看
+        Matrix.multiplyMM(matrix,0,projection,0,camera,0);
+
+
+        return matrix;
+    }
+
+
+
     //旋转
     public static float[] rotate(float[] m,float angle){
         Matrix.rotateM(m,0,angle,0,0,1);
