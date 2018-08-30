@@ -22,6 +22,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import mobile.indoorbuy.com.opengles_learn_csdn.common.Content.TAG
 import android.R.attr.y
+import android.graphics.ImageFormat
 import mobile.indoorbuy.com.opengles_learn_csdn.common.ScreenUtils
 
 
@@ -165,21 +166,12 @@ class CameraKitKat(val displayView: SurfaceView) : ACamera() {
 //        parameters.setColorEffect(Camera.Parameters.EFFECT_MONO);
 
         //设置拍照后存储的图片格式
-//        parameters.pictureFormat = PixelFormat.JPEG
-
-        if (parameters.maxNumFocusAreas > 0) {
-            val areaRect1 = Rect(-50, -50, 50, 50)
-            val focusAreas = ArrayList<Camera.Area>()
-            focusAreas.add(Camera.Area(areaRect1, 1000))
-            parameters.focusAreas = focusAreas
-        }
-        // if the camera support setting of metering area.
-        if (parameters.maxNumMeteringAreas > 0) {
-            val meteringAreas = ArrayList<Camera.Area>()
-            val areaRect1 = Rect(-100, -100, 100, 100)
-            meteringAreas.add(Camera.Area(areaRect1, 1000))
-            parameters.meteringAreas = meteringAreas
-        }
+    //    parameters.pictureFormat = ImageFormat.JPEG
+        val mCameraPreviewThousandFps = chooseFixedPreviewFps(parameters, 15 * 1000)
+        Log.e("weiwei","mCameraPreviewThousandFps = ${mCameraPreviewThousandFps/1000f}")
+        // Give the camera a hint that we're recording video.
+        // This can have a big impact on frame rate.
+        parameters.setRecordingHint(true)
 
         camera.parameters = parameters
 
@@ -224,4 +216,27 @@ class CameraKitKat(val displayView: SurfaceView) : ACamera() {
 
     }
 
+    fun chooseFixedPreviewFps(parms: Camera.Parameters, desiredThousandFps: Int): Int {
+        val supported = parms.supportedPreviewFpsRange
+
+        for (entry in supported) {
+            //Log.d(TAG, "entry: " + entry[0] + " - " + entry[1]);
+            if (entry[0] == entry[1] && entry[0] == desiredThousandFps) {
+                parms.setPreviewFpsRange(entry[0], entry[1])
+                return entry[0]
+            }
+        }
+
+        val tmp = IntArray(2)
+        parms.getPreviewFpsRange(tmp)
+        val guess: Int
+        if (tmp[0] == tmp[1]) {
+            guess = tmp[0]
+        } else {
+            guess = tmp[1] / 2     // shrug
+        }
+
+        Log.d(TAG, "Couldn't find match for $desiredThousandFps, using $guess")
+        return guess
+    }
 }

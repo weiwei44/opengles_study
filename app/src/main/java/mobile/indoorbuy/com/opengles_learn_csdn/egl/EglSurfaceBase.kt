@@ -3,6 +3,7 @@ package mobile.indoorbuy.com.opengles_learn_csdn.egl
 import android.annotation.TargetApi
 import android.opengl.EGL14
 import android.os.Build
+import android.support.annotation.RequiresApi
 import android.util.Log
 
 
@@ -59,6 +60,11 @@ open class EglSurfaceBase(val mEglCore:EGLCore){
 
     fun makeCurrentReadFrom(readSurface: EglSurfaceBase) {
         mEglCore.makeCurrent(mEGLSurface, readSurface.mEGLSurface)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+    fun setPresentationTime(nsecs: Long) {
+        mEglCore.setPresentationTime(mEGLSurface, nsecs)
     }
 
     /**

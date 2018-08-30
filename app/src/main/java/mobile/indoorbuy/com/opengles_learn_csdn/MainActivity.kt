@@ -1,23 +1,16 @@
 package mobile.indoorbuy.com.opengles_learn_csdn
 
 import android.Manifest
-import android.app.ActivityManager
 import android.content.Context
-import android.opengl.GLSurfaceView
-import android.os.Build
 import android.support.v7.app.AppCompatActivity
-import android.os.Bundle
 import android.support.annotation.RequiresApi
 import android.util.Log
-import android.view.MotionEvent
-import android.view.View
 import com.tbruyelle.rxpermissions2.RxPermissions
-import kotlinx.android.synthetic.main.activity_mian_gl.*
-import mobile.indoorbuy.com.opengles_learn_csdn.egl.EGLView
-import mobile.indoorbuy.com.opengles_learn_csdn.renderer.*
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Intent
+import android.os.*
+import kotlinx.android.synthetic.main.activity_main.*
 import mobile.indoorbuy.com.opengles_learn_csdn.activity.AlarmclockReceive
 import java.util.*
 
@@ -26,6 +19,7 @@ class MainActivity : AppCompatActivity() {
 
     private var lastClickTime = 0
 
+
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +27,16 @@ class MainActivity : AppCompatActivity() {
         requestPermissions()
   //      val eglView = EGLView(this)
         setContentView(R.layout.activity_main)
+
+        Log.e("weiwei",egl_1.toString())
+        sample.setOnClickListener {
+
+            egl_1.mRequestRecord = true
+        }
+
+        sample1.setOnClickListener {
+            egl_1.mRequestRecord = false
+        }
 
 //        setAlartTime()
 //        val activityManager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager

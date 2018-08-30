@@ -11,6 +11,9 @@ import android.opengl.EGL14
 import mobile.indoorbuy.com.opengles_learn_csdn.R.id.surface
 import android.graphics.SurfaceTexture
 import android.view.Surface
+import android.opengl.EGLExt
+
+
 
 
 /**
@@ -180,6 +183,13 @@ class EGLCore(var sharedContext: EGLContext? = null, val flags: Int = FLAG_TRY_G
         return EGL14.eglSwapBuffers(mEGLDisplay, eglSurface)
     }
 
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+            /**
+     * Sends the presentation time stamp to EGL.  Time is expressed in nanoseconds.
+     */
+    fun setPresentationTime(eglSurface: EGLSurface, nsecs: Long) {
+        EGLExt.eglPresentationTimeANDROID(mEGLDisplay, eglSurface, nsecs)
+    }
 
     /**
      * 断开并释放与EGLSurface关联的EGLContext对象

@@ -16,12 +16,12 @@
         <!--app:layout_constraintTop_toTopOf="parent" >-->
     <!--</mobile.indoorbuy.com.opengles_learn_csdn.camera.CameraPreview>-->
 
-    <mobile.indoorbuy.com.opengles_learn_csdn.egl.EGLView
-        android:id="@+id/egl"
+    <mobile.indoorbuy.com.opengles_learn_csdn.egl.EGLView1
+        android:id="@+id/egl_1"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </mobile.indoorbuy.com.opengles_learn_csdn.egl.EGLView>
+    </mobile.indoorbuy.com.opengles_learn_csdn.egl.EGLView1>
 
     <TextView
         android:id="@+id/sample"
@@ -31,6 +31,17 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginBottom="20dp"
+        android:textColor="@android:color/white"/>
+
+    <TextView
+        android:id="@+id/sample1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="停止"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginBottom="20dp"
         android:textColor="@android:color/white"/>

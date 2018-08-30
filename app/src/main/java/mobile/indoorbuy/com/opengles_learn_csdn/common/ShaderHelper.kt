@@ -15,25 +15,6 @@ import javax.microedition.khronos.opengles.GL10
  */
 object ShaderHelper {
 
-    fun compileTextureFBO(): Int {
-        val textures = IntArray(2)
-        val frameBuffer = IntArray(2)
-        //生成framebuffer
-        GLES20.glGenFramebuffers(1, frameBuffer, 0)
-        GLES20.glGenTextures(2, textures, 0)
-        for ( i in 0..2){
-            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textures[i])
-            GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_NEAREST.toFloat())
-            GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR.toFloat())
-            GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE.toFloat())
-            GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE.toFloat())
-        }
-
-
-
-        return 0
-    }
-
     /**
      * 相机预览使用EXTERNAL_OES纹理
      */
